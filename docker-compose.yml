@@ -1,0 +1,33 @@
+services:
+  api:
+    build: backend/
+    networks:
+      - main
+
+  frontend:
+    build: frontend/
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=/api/
+    depends_on:
+      - api
+    networks:
+      main:
+    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "5555:80"
+    depends_on:
+      - frontend
+      - api
+    volumes:
+      - ./src/media:/app/src/media
+    networks:
+      - main
+
+
+networks:
+  main:
+    driver: bridge
