@@ -1,6 +1,14 @@
 import {SmileCosmetic} from "./cosmetic.js";
 import {base64ToArrayBuffer, arrayBufferToBase64} from "./base64.js";
 
+
+let FIRST_INVISIBLE_SYMBOL, SECOND_INVISIBLE_SYMBOL;
+
+
+FIRST_INVISIBLE_SYMBOL = '\ufeff'
+SECOND_INVISIBLE_SYMBOL = '\u2061'
+
+
 function getCosmeticClassByVersion(version) {
     if (version === 1) {
         return SmileCosmetic;
@@ -12,7 +20,7 @@ function encodeVersionByInvisibleSymbols(version) {
     let versionCypher = "";
 
     for (const char of version.toString(2)) {
-        versionCypher += char === "1" ? '\u200b' : '\u200c'
+        versionCypher += char === "1" ? FIRST_INVISIBLE_SYMBOL : SECOND_INVISIBLE_SYMBOL
     }
 
     return versionCypher;
@@ -22,7 +30,7 @@ function decodeVersionFromInvisibleSymbols(cypherText) {
     const invisibleChars = [];
     for (let i = cypherText.length - 1; i >= 0; i--) {
         const char = cypherText[i];
-        if (char === '\u200b' || char === '\u200c') {
+        if (char === FIRST_INVISIBLE_SYMBOL || char === SECOND_INVISIBLE_SYMBOL) {
             invisibleChars.unshift(char);
         } else {
             break;
@@ -35,7 +43,7 @@ function decodeVersionFromInvisibleSymbols(cypherText) {
 
     let binaryString = "";
     for (const char of invisibleChars) {
-        binaryString += char === '\u200b' ? '1' : '0';
+        binaryString += char === FIRST_INVISIBLE_SYMBOL ? '1' : '0';
     }
 
 
@@ -46,7 +54,7 @@ function extractCosmeticText(cypherWithCosmetic) {
     let cosmeticText = cypherWithCosmetic;
     for (let i = cypherWithCosmetic.length - 1; i >= 0; i--) {
         const char = cypherWithCosmetic[i];
-        if (char === '\u200b' || char === '\u200c') {
+        if (char === FIRST_INVISIBLE_SYMBOL || char === SECOND_INVISIBLE_SYMBOL) {
             cosmeticText = cosmeticText.slice(0, -1);
         } else {
             break;
