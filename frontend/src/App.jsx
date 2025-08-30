@@ -4,6 +4,7 @@ import { ArrowUpDown } from "lucide-react";
 import splashes, { getRandomInt } from "./data/splashes.js";
 import { getEncryptedAESKey } from "./services/encryptService.js";
 import generateCompatibleRSAKeys, { decryptRSA } from "./encryption/rsa.js";
+import { customEncrypt, customDecrypt} from "./encryption/custom.js";
 import { useAsyncCrypto } from './hooks/useAsyncCrypto.js';
 import {useNotification} from "./components/Notification.jsx";
 
@@ -16,7 +17,7 @@ function App() {
     const [randomNumber] = useState(() => getRandomInt(0, splashes.length - 1));
     const [showOverlay, setShowOverlay] = useState(false);
 
-    const { encrypt, decrypt, isProcessing, error } = useAsyncCrypto();
+    const { encrypt, decrypt } = useAsyncCrypto();
     const videoRef = useRef(null);
 
     const executeRequestAndSaveAESKey = async () => {
@@ -34,9 +35,15 @@ function App() {
         if (!localStorage.getItem('AESKey')) {
             setIsAESKeyAvailable(false);
             executeRequestAndSaveAESKey();
-            showNotification("Обмен ключами шифрования прошел успешно. Ключ AES сохранен")
-            setIsAESKeyAvailable(true);
-            setTimeout(showNotification, 5100, "🎉Поздравляем, вы теперь дешїfґѧҭѻҏ!🎉")
+            if (localStorage.getItem('AESKey')) {
+                showNotification("Обмен ключами шифрования прошел успешно. Ключ AES сохранен")
+                setIsAESKeyAvailable(true);
+                setTimeout(showNotification, 5100, "🎉Поздравляем, вы теперь дешїfґѧҭѻҏ!🎉")
+            } else {
+                showNotification("Обмен ключами шифрования провален, ошибка запроса.")
+                setIsAESKeyAvailable(false);
+            }
+
         }
     }, []);
 
@@ -54,9 +61,9 @@ function App() {
         try {
             let result;
             if (isEncryptMode) {
-                result = await encrypt(text);
+                result = await customEncrypt(text, encrypt, 1);
             } else {
-                result = await decrypt(text);
+                result = await customDecrypt(text, decrypt);
             }
             setOutputText(result);
         } catch (err) {
@@ -74,9 +81,9 @@ function App() {
             try {
                 let result;
                 if (!isEncryptMode) {
-                    result = await encrypt(outputText);
+                    result = await customEncrypt(outputText, encrypt, 1);
                 } else {
-                    result = await decrypt(outputText);
+                    result = await customDecrypt(outputText, decrypt);
                 }
                 setOutputText(result);
             } catch (err) {
