@@ -88,7 +88,7 @@ function App() {
                 setOutputText(result);
             } catch (err) {
                 console.error('Ошибка при переключении режима:', err);
-                setOutputText('Ошибка обработки');
+                setOutputText('Неверный шифр');
             }
         }
     }, [isEncryptMode, outputText, encrypt, decrypt]);

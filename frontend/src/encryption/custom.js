@@ -62,21 +62,17 @@ export async function customEncrypt(plainText, mainEncrypt, version = 0) {
     const cosmeticInstance = new (getCosmeticClassByVersion(version))(cypherBytes);
     let messageText = cosmeticInstance.convertToCosmetic();
 
-    const maxChar = cosmeticInstance.maxCharUsed;   // берём реально заменённый символ
-    messageText += encodeVersionByInvisibleSymbols(version);
-    messageText += maxChar;
-    return messageText;
+    return messageText + encodeVersionByInvisibleSymbols(version) + "\u200A";
 }
 
 export async function customDecrypt(cypherWithCosmetic, mainDecrypt) {
-    let maxChar = cypherWithCosmetic.at(-1);
     cypherWithCosmetic = cypherWithCosmetic.slice(0, -1);
+
     const version = decodeVersionFromInvisibleSymbols(cypherWithCosmetic);
+    const cosmeticText = extractCosmeticText(cypherWithCosmetic);
 
-    const cosmeticText = extractCosmeticText(cypherWithCosmetic)
     const cosmeticClass = getCosmeticClassByVersion(version);
-
-    const cypherBytes = new cosmeticClass(null).extractData(cosmeticText + maxChar);
+    const cypherBytes = new cosmeticClass(null).extractData(cosmeticText);
 
     const cypherBase64 = arrayBufferToBase64(cypherBytes);
     return await mainDecrypt(cypherBase64);

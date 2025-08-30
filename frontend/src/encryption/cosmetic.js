@@ -49,19 +49,21 @@ export class SubstitutionCosmetic extends AbstractCosmeticClass {
         if (this.insertSpaces && newMessageText.length > 10) {
             const maxChar = getMaxCommonChar(newMessageText);
             this.maxCharUsed = maxChar;
-            return this.replaceMiddleChars(newMessageText, maxChar, " ");
+            newMessageText = this.replaceMiddleChars(newMessageText, maxChar, " ");
+        } else {
+            this.maxCharUsed = getMaxCommonChar(newMessageText);
         }
 
-        this.maxCharUsed = getMaxCommonChar(newMessageText);
-        return newMessageText;
+        return newMessageText + this.maxCharUsed;
     }
 
     extractData(cosmeticText) {
         this.maxChar = cosmeticText.at(-1);
         cosmeticText = cosmeticText.slice(0, -1);
-        const textWithoutSpaces = this.restoreSpaces(cosmeticText);
 
+        const textWithoutSpaces = this.restoreSpaces(cosmeticText);
         const bytes = new Uint8Array(textWithoutSpaces.length);
+
         for (let i = 0; i < textWithoutSpaces.length; i++) {
             const charCode = textWithoutSpaces.codePointAt(i);
             const byte = charCode - this.substitution;
