@@ -34,15 +34,16 @@ function App() {
     useEffect(() => {
         if (!localStorage.getItem('AESKey')) {
             setIsAESKeyAvailable(false);
-            executeRequestAndSaveAESKey();
-            if (localStorage.getItem('AESKey')) {
+            try {
+                executeRequestAndSaveAESKey();
                 showNotification("Обмен ключами шифрования прошел успешно. Ключ AES сохранен")
                 setIsAESKeyAvailable(true);
                 setTimeout(showNotification, 5100, "🎉Поздравляем, вы теперь дешїfґѧҭѻҏ!🎉")
-            } else {
-                showNotification("Обмен ключами шифрования провален, ошибка запроса.")
+            } catch (error) {
+                showNotification("Обмен ключами шифрования провален, ошибка запроса. Обновите страницу")
                 setIsAESKeyAvailable(false);
             }
+
 
         }
     }, []);
@@ -68,7 +69,7 @@ function App() {
             setOutputText(result);
         } catch (err) {
             console.error('Ошибка обработки:', err);
-            setOutputText('Ошибка обработки');
+            setOutputText('Неверный текст или шифр');
         }
     }, [isEncryptMode, isAESKeyAvailable, encrypt, decrypt]);
 
@@ -88,7 +89,7 @@ function App() {
                 setOutputText(result);
             } catch (err) {
                 console.error('Ошибка при переключении режима:', err);
-                setOutputText('Неверный шифр');
+                setOutputText('Неверный текст или шифр');
             }
         }
     }, [isEncryptMode, outputText, encrypt, decrypt]);

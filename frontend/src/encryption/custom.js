@@ -62,7 +62,7 @@ export async function customEncrypt(plainText, mainEncrypt, version = 0) {
     const cosmeticInstance = new (getCosmeticClassByVersion(version))(cypherBytes);
     let messageText = cosmeticInstance.convertToCosmetic();
 
-    return messageText + encodeVersionByInvisibleSymbols(version) + "\u200A";
+    return messageText + encodeVersionByInvisibleSymbols(version) + "\u2061";
 }
 
 export async function customDecrypt(cypherWithCosmetic, mainDecrypt) {
