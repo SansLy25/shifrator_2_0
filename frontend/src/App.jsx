@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import Input from "./components/Input.jsx";
-import { ArrowUpDown } from "lucide-react";
-import splashes, { getRandomInt } from "./data/splashes.js";
-import { getEncryptedAESKey } from "./services/encryptService.js";
-import generateCompatibleRSAKeys, { decryptRSA } from "./encryption/rsa.js";
-import { customEncrypt, customDecrypt} from "./encryption/custom.js";
-import { useAsyncCrypto } from './hooks/useAsyncCrypto.js';
+import {ArrowUpDown} from "lucide-react";
+import splashes, {getRandomInt} from "./data/splashes.js";
+import {getEncryptedAESKey} from "./services/encryptService.js";
+import generateCompatibleRSAKeys, {decryptRSA} from "./encryption/rsa.js";
+import {customEncrypt, customDecrypt} from "./encryption/custom.js";
+import {useAsyncCrypto} from './hooks/useAsyncCrypto.js';
 import {useNotification} from "./components/Notification.jsx";
 
 function App() {
-    const { showNotification } = useNotification();
+    const {showNotification} = useNotification();
     const [inputText, setInputText] = useState('');
     const [outputText, setOutputText] = useState('');
     const [isEncryptMode, setIsEncryptMode] = useState(true);
@@ -17,11 +17,11 @@ function App() {
     const [randomNumber] = useState(() => getRandomInt(0, splashes.length - 1));
     const [showOverlay, setShowOverlay] = useState(false);
 
-    const { encrypt, decrypt } = useAsyncCrypto();
+    const {encrypt, decrypt} = useAsyncCrypto();
     const videoRef = useRef(null);
 
     const executeRequestAndSaveAESKey = async () => {
-        let { privateKeyPkcs8, publicKeyBase64 } = await generateCompatibleRSAKeys();
+        let {privateKeyPkcs8, publicKeyBase64} = await generateCompatibleRSAKeys();
         try {
             const encryptedAESKey = await getEncryptedAESKey(publicKeyBase64);
             const decryptedAESKey = await decryptRSA(privateKeyPkcs8, encryptedAESKey);
@@ -118,7 +118,8 @@ function App() {
                 >
                     <source src="/background_video.mp4" type="video/mp4"/>
                 </video>
-                <div className={`absolute inset-0 bg-blue-600/40 mix-blend-multiply transition-opacity duration-1200 ${showOverlay ? 'opacity-100' : 'opacity-0'}`}></div>
+                <div
+                    className={`absolute inset-0 bg-blue-600/40 mix-blend-multiply transition-opacity duration-1200 ${showOverlay ? 'opacity-100' : 'opacity-0'}`}></div>
             </div>
 
             <div

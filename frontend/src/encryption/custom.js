@@ -1,4 +1,4 @@
-import { SmileCosmetic, getMaxCommonChar } from "./cosmetic.js";
+import {SmileCosmetic} from "./cosmetic.js";
 import {base64ToArrayBuffer, arrayBufferToBase64} from "./base64.js";
 
 function getCosmeticClassByVersion(version) {
@@ -78,7 +78,3 @@ export async function customDecrypt(cypherWithCosmetic, mainDecrypt) {
     return await mainDecrypt(cypherBase64);
 }
 
-let text = "o23hmOxZi3vqhRc6mgk3XY8sVA+ZPBLcpU6I2dAJLzDFVEYK4qVqF/8TIRI="
-console.log(text);
-console.log(await customEncrypt(text, (t) => t, 1))
-console.log(await customDecrypt(await customEncrypt(text, (t) => t, 1), (t) => t))
