@@ -49,7 +49,7 @@ export const OtherVideo = () => {
                         gap: '10px'
                     }}
                 >
-                    <span>Шiфровать</span>
+                    <span>НѧчаTb</span>
                 </button>
             )}
         </div>
