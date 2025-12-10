@@ -3,11 +3,13 @@
 html, body {
     height: 100%;
     overflow: hidden;
+    background: black;
 }
 
 #root {
     height: 100vh;
     overflow-y: auto;
+    color: black;
     -webkit-overflow-scrolling: touch;
 }
 
